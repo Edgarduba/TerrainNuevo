@@ -190,6 +190,13 @@ public class ThirdPersonController : MonoBehaviour
             //la altura depende del valor de jumpHeight 
             //Si jumpHeigt es 1 saltara 1 metro de alto
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity); 
+            anim.SetBool("Jump" , true);
+        }
+       
+        if(isGrounded == true) 
+        {
+            Debug.Log("Suelo");
+            anim.SetBool("Jump" , false);
         }
 
         //a playervelocity.y le iremos sumando el valor de la gravedad
@@ -198,6 +205,9 @@ public class ThirdPersonController : MonoBehaviour
         //asi le aplicaremos la gravedad
         controller.Move(playerVelocity * Time.deltaTime);
     }
-#endregion
+     
+       
 
+#endregion
 }
+
