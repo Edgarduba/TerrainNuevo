@@ -10,7 +10,7 @@ public class MiniMapCamera : MonoBehaviour
     void LateUpdate()
     {
         //Hacemos que la camara siga al personaje
-        transform.position = new Vector3(player.position.x, transform.position.y, player.position.z);
+        transform.position = new Vector3(player.position.x, player.position.y + 600, player.position.z);
         //hacemos que la camara gire con el personaje
         //en el eje X le ponemos 90 para que la camara apunte hacia abajo
         transform.rotation = Quaternion.Euler(90, player.eulerAngles.y, 0);
