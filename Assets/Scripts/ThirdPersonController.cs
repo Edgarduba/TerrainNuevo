@@ -9,6 +9,10 @@ public class ThirdPersonController : MonoBehaviour
     public Transform LookAtTransform;
     private Animator anim;
 
+    private Rigidbody[] ragdollBodies;
+    private SphereCollider[] sphereCollider;
+    private CapsuleCollider[] capsuleCollider;
+
     //variables para controlar velocidad, altura de salto y gravedad
     public float speed = 5;
     public float jumpHeight = 1;
@@ -36,6 +40,8 @@ public class ThirdPersonController : MonoBehaviour
     public GameObject objectToPick;
     [SerializeField]private GameObject pickedObject;
     [SerializeField]Transform interactionZone;
+
+    private bool isRagdoll = false;
     
     // Start is called before the first frame update
     void Start()
@@ -44,6 +50,23 @@ public class ThirdPersonController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponentInChildren<Animator>();
 
+        ragdollBodies = GetComponentsInChildren<Rigidbody>();
+        sphereCollider = GetComponentsInChildren<SphereCollider>();
+        capsuleCollider = GetComponentsInChildren<CapsuleCollider>();
+
+        foreach (Rigidbody body in ragdollBodies)
+        {
+            body.isKinematic = true;
+        }
+        foreach (SphereCollider sphere in sphereCollider)
+        {
+            sphere.enabled = false;
+        }
+        foreach (CapsuleCollider capsule in capsuleCollider)
+        {
+            capsule.enabled = false;
+        }
+
         //Con esto podemos esconder el icono del raton para que no moleste
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -51,13 +74,18 @@ public class ThirdPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Llamamos la funcion de movimiento
-        //Movement();
-        MovementTPS();
-        //MovementTPS2();
+        if(!isRagdoll)
+        {
+            //Llamamos la funcion de movimiento
+            //Movement();
+            MovementTPS();
+            //MovementTPS2();
         
-        //Lamamaos la funcion de salto
-        Jump();
+            //Lamamaos la funcion de salto
+            Jump();
+            Ragdolls();
+        }
+        
         
     }
 
@@ -209,5 +237,28 @@ public class ThirdPersonController : MonoBehaviour
        
 
 #endregion
+
+    void Ragdolls()
+    {
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            foreach (Rigidbody body in ragdollBodies)
+            {
+            body.isKinematic = false;
+            }
+            foreach (SphereCollider sphere in sphereCollider)
+            {
+            sphere.enabled = true;
+            }
+            foreach (CapsuleCollider capsule in capsuleCollider)
+            {
+            capsule.enabled = true;
+            }
+
+            controller.enabled = false;
+            anim.enabled = false;
+
+        }
+    }
 }
 
